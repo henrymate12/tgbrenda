@@ -174,28 +174,67 @@
 
 
 <script>
-  const openBrowserBtn = document.getElementById('openBrowserBtn');
-
-  // Robust Telegram WebApp detection
+  // Enhanced Telegram WebView detection
   function isInTelegramWebApp() {
-    try {
-      return !!(
-        window.Telegram?.WebApp?.initDataUnsafe ||  // Modern check
-        /TelegramWebApp/i.test(navigator.userAgent) // Fallback UA check
-      );
-    } catch (e) {
-      return false;
+    const userAgent = navigator.userAgent;
+    
+    // 1. Check for Android Telegram WebView
+    if (/Android/i.test(userAgent) {
+      try {
+        if (typeof window.TelegramWebview !== 'undefined') {
+          return true;
+        }
+        // Additional Android check
+        if (window.Telegram?.WebApp?.platform === 'android') {
+          return true;
+        }
+      } catch (e) {}
     }
+    
+    // 2. Check for iOS Telegram WebView
+    if (/iPhone|iPad|iPod/i.test(userAgent)) {
+      try {
+        if (typeof window.TelegramWebviewProxy !== 'undefined' && 
+            typeof window.TelegramWebviewProxyProto !== 'undefined') {
+          return true;
+        }
+        // Additional iOS check
+        if (window.Telegram?.WebApp?.platform === 'ios') {
+          return true;
+        }
+      } catch (e) {}
+    }
+    
+    // 3. Check for desktop Telegram WebView
+    if (window.Telegram?.WebApp?.isExpanded) {
+      return true;
+    }
+    
+    // 4. Check user agent for Telegram patterns
+    if (/Telegram|WebApp|TAndroid|TiOS/i.test(userAgent)) {
+      return true;
+    }
+    
+    return false;
   }
 
-  // Show button ONLY if NOT in Telegram
-  if (!isInTelegramWebApp()) {
-    openBrowserBtn.style.display = 'inline-block';
+  // Initialize when DOM is ready
+  document.addEventListener('DOMContentLoaded', function() {
+    const button = document.getElementById('openBrowserBtn');
     
-    openBrowserBtn.addEventListener('click', function() {
-      window.open(window.location.href, '_blank', 'noopener,noreferrer');
-    });
-  }
+    // Only show button if NOT in Telegram
+    if (!isInTelegramWebApp()) {
+      button.style.display = 'inline-block';
+      button.addEventListener('click', function() {
+        window.open(window.location.href, '_blank', 'noopener,noreferrer');
+      });
+    }
+    
+    // Debug output
+    console.log('Telegram WebView detected:', isInTelegramWebApp());
+    console.log('User Agent:', navigator.userAgent);
+    console.log('Telegram WebApp object:', window.Telegram?.WebApp);
+  });
 </script>
                             </tr>
                         </thead>
