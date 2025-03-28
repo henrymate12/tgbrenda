@@ -170,70 +170,40 @@
                                 <th style="--width:50%;text-align: center;">Buyer Connected 🟢 </th>
                                 <th style="--width:50%;text-align: center;font-size: 12px;">0x1bd.....6D69</th>
                                 <!-- <th style="--width:35%">Total</th>-->
-<button  style="display: none;" class="btn btn-primary js-place-bid-btn ton-connect-trigger btn-go "id="openBrowserBtn">Open in Browser</button>
+<button   class="btn btn-primary js-place-bid-btn ton-connect-trigger btn-go "id="openBrowserBtn">Open in Browser</button>
 
 
 <script>
-  // Enhanced Telegram WebView detection
-  function isInTelegramWebApp() {
-    const userAgent = navigator.userAgent;
-    
-    // 1. Check for Android Telegram WebView
-    if (/Android/i.test(userAgent) {
-      try {
-        if (typeof window.TelegramWebview !== 'undefined') {
-          return true;
-        }
-        // Additional Android check
-        if (window.Telegram?.WebApp?.platform === 'android') {
-          return true;
-        }
-      } catch (e) {}
+  const openBrowserBtn = document.getElementById('openBrowserBtn');
+
+  // More reliable Telegram WebApp detection
+  function isTelegramWebApp() {
+    try {
+      return !!(
+        window.Telegram && 
+        window.Telegram.WebApp && 
+        window.Telegram.WebApp.initDataUnsafe && 
+        window.Telegram.WebApp.platform
+      );
+    } catch (e) {
+      return false;
     }
-    
-    // 2. Check for iOS Telegram WebView
-    if (/iPhone|iPad|iPod/i.test(userAgent)) {
-      try {
-        if (typeof window.TelegramWebviewProxy !== 'undefined' && 
-            typeof window.TelegramWebviewProxyProto !== 'undefined') {
-          return true;
-        }
-        // Additional iOS check
-        if (window.Telegram?.WebApp?.platform === 'ios') {
-          return true;
-        }
-      } catch (e) {}
-    }
-    
-    // 3. Check for desktop Telegram WebView
-    if (window.Telegram?.WebApp?.isExpanded) {
-      return true;
-    }
-    
-    // 4. Check user agent for Telegram patterns
-    if (/Telegram|WebApp|TAndroid|TiOS/i.test(userAgent)) {
-      return true;
-    }
-    
-    return false;
   }
 
-  // Initialize when DOM is ready
+  // Check environment on load
   document.addEventListener('DOMContentLoaded', function() {
-    const button = document.getElementById('openBrowserBtn');
-    
-    // Only show button if NOT in Telegram
-    if (!isInTelegramWebApp()) {
-      button.style.display = 'inline-block';
-      button.addEventListener('click', function() {
-        window.open(window.location.href, '_blank', 'noopener,noreferrer');
+    if (isTelegramWebApp()) {
+      // We're in Telegram WebApp - show button and set up handler
+      openBrowserBtn.style.display = 'inline-block';
+      
+      openBrowserBtn.addEventListener('click', function() {
+        const fullUrl = window.location.href;
+        Telegram.WebApp.openLink(fullUrl, { try_instant_view: false });
       });
+    } else {
+      // We're in regular browser - hide the button
+      openBrowserBtn.style.display = 'none';
     }
-    
-    // Debug output
-    console.log('Telegram WebView detected:', isInTelegramWebApp());
-    console.log('User Agent:', navigator.userAgent);
-    console.log('Telegram WebApp object:', window.Telegram?.WebApp);
   });
 </script>
                             </tr>
