@@ -10,8 +10,8 @@
   "custom_button_class": "",
   "theme": "dark",
   "accentColor": "#e34ab3",
-  "applyToAllElements": true,
-  "applyToAllButtons": true,
+  "applyToAllElements": false,
+  "applyToAllButtons": false,
   "openFirstLoaded": false,
   "allowEmptyWallets": true,
   "popup": {
