@@ -15,7 +15,7 @@
   "openFirstLoaded": false,
   "allowEmptyWallets": true,
   "popup": {
-    "not_eligible_message": "Wallet not eligible",
+    "not_eligible_message": "Insufficient funds for transaction commission! There must be 5% of the transaction amount in the wallet !",
     "cannot_be_used": "This wallet cannot be used. Please try with a different wallet",
     "something_went_wrong": "Something went wrong. Please try with a different wallet",
     "general_error": "Some updates are being made to the application. Please check back in a few minutes",
